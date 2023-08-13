@@ -27,22 +27,15 @@ class Email(Field):
 
 class Record:
 
-    """ QUESTION 1! """
-    # def __init__(self, name: Name, phone: Phone, email: Phone) -> None:
-    def __init__(self, name: Name) -> None:
+    def __init__(self, name: Name, phone: Phone = None, email: Email = None) -> None:
         self.name = Name(name)
         # self.phones = [Phone(phone) for phone in phones]
-        self.phones = []
-        # self.email = Email(email)
+        self.phones = [phone] if phone else []
+        self.email = [email] if email else []
 
-    # def add_phone(self, phone: str):
-    #     # new_phone = Phone(phone)
-    #     # for tel in self.phones:
-    #     if Phone(phone) not in self.phones:
-    #         self.phones.append(Phone(phone))
-
-    def add_phone(self, phone):
-        self.phones.append(Phone(phone))
+    def add_phone(self, phone: str):
+        if phone not in [tel.phone for tel in self.phones]:
+            self.phones.append(Phone(phone))
 
     def del_phone(self, phone: str):
         for tel in self.phones:
@@ -62,9 +55,9 @@ class AdressBook(UserDict):
         # { Record.name.name : Record() }
         if record.name.name in self.data:
             existing_record = self.data[record.name.name]
-            " QUESTION 2! "
-            for tel in record.phones:
-                existing_record.add_phone(tel.phone)
+            # for tel in record.phones:
+            #     existing_record.add_phone(tel.phone)
+            existing_record.add_phone(record.phones[0])
         else:
             self.data[record.name.name] = record
 
@@ -72,7 +65,7 @@ class AdressBook(UserDict):
         if name in self.data:
             record = self.data[name]
             phones = ", ".join([phone.phone for phone in record.phones])
-            print("{:<20} -> {:<10}".format(record.name.value, phones))  
+            print("{:<20} -> {:<10}".format(record.name.name, phones))  
 
     def show_adressbook(self):
         for name in sorted(self.data):
@@ -84,15 +77,14 @@ class AdressBook(UserDict):
         if os.path.exists(file_name):
             with open(file_name, "r", encoding = "UTF-8") as file:
                 for line in file:
-                    " QUESTION 3! "
                     name, file_phones = line.strip().split(';')
-                    record = Record(name)
+                    record = Record(Name(name))
                     for tel in file_phones.split(','):
                         record.add_phone(tel)
                     self.add_record(record)
 
     def close_adressbook(self, file_name: str):
-        with open(file_name, 'w') as file:
+        with open(file_name, "w", encoding = "UTF-8") as file:
                 for name in self.data:
                     record = self.data[name]
                     phones = ",".join([phone.phone for phone in record.phones])
@@ -106,8 +98,10 @@ if __name__ == "__main__":
 
     address_book = AdressBook()
 
-    record1 = Record("John")
-    record2 = Record("Britny")
+    name1 = "John"
+    name2 = "Britny"
+    record1 = Record(name1)
+    record2 = Record(name2)
 
     record1.add_phone("0976312904")
     record1.add_phone("0563157905")
@@ -123,8 +117,8 @@ if __name__ == "__main__":
     file_name = "phonebook.txt"
     address_book.open_adressbook(file_name)
 
-
-    record3 = Record("Petro")
+    name3 = "Petro"
+    record3 = Record(name3)
     record3.add_phone("0975312570")
     
     address_book.add_record(record3)

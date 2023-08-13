@@ -26,11 +26,11 @@ class Email(Field):
 
 class Record:
 
-    def __init__(self, name: Name, phone: Phone, email: Email):
+    def __init__(self, name: Name, phone: Phone = None, email: Email = None):
         self.name = name
         # self.phones = [Phone(phone) for phone in phones]
-        self.phones = [phone]
-        self.email = email
+        self.phones = [phone] if phone else []
+        self.email = [email] if email else []
 
     def add_phone(self, phone: str):
         new_phone = Phone(phone)
