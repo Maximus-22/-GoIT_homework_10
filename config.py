@@ -26,7 +26,7 @@ class Email(Field):
 
 class Record:
 
-    def __init__(self, name: Name, phone: Phone, email: Phone):
+    def __init__(self, name: Name, phone: Phone, email: Email):
         self.name = name
         # self.phones = [Phone(phone) for phone in phones]
         self.phones = [phone]
